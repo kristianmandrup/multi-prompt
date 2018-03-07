@@ -1,0 +1,50 @@
+{
+  "name": "multi-prompt",
+  "version": "0.1.0",
+  "description": "Run a set of prompts ordered in sections, feeding previous or known answers down through to each section",
+  "main": "dist",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "prompt",
+    "inquire",
+    "multiple",
+    "sections",
+    "inquirer",
+    "questions",
+    "answers"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kristianmandrup/multi-prompt.git"
+  },
+  "author": "Kristian Mandrup <kmandrup@gmail.com>",
+  "contributors": [
+    "Kristian Mandrup <kmandrup@gmail.com>"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "inquirer": "^5.1.0"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "transform": {
+      "\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "/__tests__/.*\\.(ts|tsx|js)$"
+  },
+  "devDependencies": {
+    "@types/inquirer": "0.0.36",
+    "@types/jest": "^22.1.4",
+    "ts-jest": "^22.4.1",
+    "typescript": "^2.7.2",
+    "install": "^0.10.4",
+    "jest": "^22.4.2",
+    "npm": "^5.7.1"
+  }
+}
