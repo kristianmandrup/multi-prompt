@@ -11,7 +11,7 @@ import * as inquirer from 'inquirer'
 
 import {
   multiPrompt
-} from '../src'
+} from 'multi-prompt'
 
 async function secondPrompt(answers: any, opts: any) {
   return [{
@@ -152,3 +152,6 @@ function fakePrompt(promptDefList: any, options: any) {
 }
 ```
 
+## License
+
+MIT
