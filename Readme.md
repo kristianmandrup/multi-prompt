@@ -1,5 +1,7 @@
 # Multi prompt
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/kristianmandrup/multi-prompt.svg)](https://greenkeeper.io/)
+
 Divide questions/prompts into multiple sections, where the answers to each section is fed into the next in a chain.
 
 You can furthermore feed *multi prompt* with a set of known answers, and the user will not be prompted to answer those questions.
