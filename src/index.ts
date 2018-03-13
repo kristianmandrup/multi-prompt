@@ -9,7 +9,7 @@ function isFunction(value: any) {
   return typeof value === 'function'
 }
 
-function validate(sections: any, name: string, options: any) {
+export function validate(sections: any, name: string, options: any) {
   const section = sections[name]
   if (!sections) {
     options.error(`Flow ${name} has no matching prompt section`, {
@@ -26,7 +26,7 @@ function validate(sections: any, name: string, options: any) {
   return true
 }
 
-async function asyncReduce(array: any[], handler: Function, startingValue: any) {
+export async function asyncReduce(array: any[], handler: Function, startingValue: any) {
   let result = startingValue;
 
   for (let value of array) {
@@ -52,7 +52,7 @@ function promptNames(promptDefList: any[], options: any): string[] {
  * Create the prompts to ask for this section
  * @param opts
  */
-async function createPromptsToAsk(opts: any) {
+export async function createPromptsToAsk(opts: any) {
   const {
     section,
     accAnswers,
@@ -81,7 +81,7 @@ async function createPromptsToAsk(opts: any) {
   return promptsToAsk
 }
 
-function getPromptsToAsk(promptDefList: any[], filtering: any, options: any) {
+export function getPromptsToAsk(promptDefList: any[], filtering: any, options: any) {
   let {
     include,
     exclude
@@ -110,12 +110,12 @@ function getPromptsToAsk(promptDefList: any[], filtering: any, options: any) {
 
 function noop() { }
 
-function error(msg: string, data: any) {
+export function error(msg: string, data: any) {
   data ? console.error(msg, data) : console.error(msg)
   throw new Error(msg)
 }
 
-function createLog(log: Function, options: any) {
+export function createLog(log: Function, options: any) {
   return function (msg: string, data: any) {
     if (options.logOn) {
       data ? log(msg, data) : log(msg)
@@ -123,15 +123,44 @@ function createLog(log: Function, options: any) {
   }
 }
 
-const $defaults = {
+export function mergeResultWithKnownAnswers(knownAnswers: any, answersPrompted: any, options?: any) {
+  const {
+    merge
+  } = options
+  return merge(knownAnswers, answersPrompted)
+}
+
+export function groupSectionAnswers(accAnswers: any, answers: any, section?: any, options?: any) {
+  const {
+    merge
+  } = options
+  const sectionAnswers = {
+    [section.name]: answers
+  }
+  return merge(accAnswers, sectionAnswers)
+}
+
+
+export function mergeSectionAnswers(accAnswers: any, answers: any, section?: any, options?: any) {
+  const {
+    merge
+  } = options
+  return merge(accAnswers, answers)
+}
+
+export const $defaults = {
   createLog,
   log: console.log,
   error,
+  merge: Object.assign,
   prompt: inquirer.prompt,
   promptNames,
   promptDefToArray,
   getPromptsToAsk,
   createPromptsToAsk,
+  groupSectionAnswers,
+  mergeSectionAnswers,
+  mergeResultWithKnownAnswers,
   on: {
     sectionNew: noop,
     sectionCreated: noop,
@@ -140,12 +169,12 @@ const $defaults = {
   }
 }
 
-async function doCallback(on: any, name: string, ...args: any[]) {
+export async function doCallback(on: any, name: string, ...args: any[]) {
   const cb = on[name]
   await isFunction(cb) ? cb(...args) : noop()
 }
 
-function validPromptsToAsk(promptsToAsk: any, options: any) {
+export function validPromptsToAsk(promptsToAsk: any, options: any) {
   const {
     error,
     warn
@@ -173,9 +202,18 @@ export async function multiPrompt(promptsDef: IPromptsDef, options: any) {
     on,
     knownAnswers,
     defaults,
-    createPromptsToAsk
+    createPromptsToAsk,
+    mergeSectionAnswers,
+    mergeResultWithKnownAnswers,
+    merge
   } = options
   defaults = defaults || $defaults
+
+  merge = merge || defaults.merge
+  options.merge = merge
+
+  mergeResultWithKnownAnswers = mergeResultWithKnownAnswers || defaults.mergeResultWithKnownAnswers
+  mergeSectionAnswers = mergeSectionAnswers || defaults.mergeSectionAnswers
   prompt = prompt || defaults.prompt
   knownAnswers = knownAnswers || {}
   createPromptsToAsk = createPromptsToAsk || defaults.createPromptsToAsk
@@ -230,11 +268,11 @@ export async function multiPrompt(promptsDef: IPromptsDef, options: any) {
       answers
     })
 
-    return Object.assign(accAnswers, answers)
+    return mergeSectionAnswers(accAnswers, answers, section, options)
   }, knownAnswers)
 
   await doCallback(on, 'promptedAnswers', answersPrompted, options)
 
   // merge with known answers
-  return Object.assign(answersPrompted, knownAnswers)
+  return mergeResultWithKnownAnswers(knownAnswers, answersPrompted, options)
 }

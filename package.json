@@ -1,6 +1,6 @@
 {
   "name": "multi-prompt",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Run a set of prompts ordered in sections, feeding previous or known answers down through to each section",
   "main": "dist",
   "scripts": {
@@ -43,8 +43,6 @@
     "@types/jest": "^22.1.4",
     "ts-jest": "^22.4.1",
     "typescript": "^2.7.2",
-    "install": "^0.10.4",
-    "jest": "^22.4.2",
-    "npm": "^5.7.1"
+    "jest": "^22.4.2"
   }
 }

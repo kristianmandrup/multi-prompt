@@ -4,6 +4,34 @@ Divide questions/prompts into multiple sections, where the answers to each secti
 
 You can furthermore feed *multi prompt* with a set of known answers, and the user will not be prompted to answer those questions.
 
+## Grouping answers by section
+
+You can furthermore group answers into sections to achieve a nested answers structure.
+This is super useful f.ex to fill out the sections in a nested configuration such as `package.json`.
+It also allows you to use namespacing, such that prompts with the same name but in different sections don't conflict as they are merged into their own namespace.
+
+The end result might look like this, built from 4 `name` prompts grouped in their own section and merged accordingly without overlap or conflict.
+
+```js
+{
+  name: 'multi-prompt',
+  repository: {
+    name: 'kmandrup/multi-prompt'
+  },
+  author: {
+    name: 'kristian'
+  },
+  company: {
+    name: 'my-company',
+    url: 'my-company.com'
+  }
+}
+```
+
+No more a need to use `repositoryName` to distinguish and avoid conflict :)
+
+Simply awesome!
+
 ## Usage
 
 ```js
@@ -87,6 +115,21 @@ const answers = await multiPrompt(prompts, options)
 ### knownAnswers
 
 Object containing a map of answer names and answer provided. Can be used to filter prompts asked to the user
+
+### merge
+
+You can pass a custom merge function such as [deepmerge](https://www.npmjs.com/package/deepmerge) to override the default `Object.assign` (flat merge)
+
+### mergeSectionAnswers
+
+Control how answers to each section are merged into the accumulator result.
+This can f.ex be used to group answers by section instead of having all answers in a flat key/value structure.
+
+You can use the exported function `groupSectionAnswers` to achieve this.
+
+### mergeResultWithKnownAnswers
+
+Control how the resulting answers to all sections are merged with the set of known answers.
 
 ### on
 
